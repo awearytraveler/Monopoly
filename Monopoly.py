@@ -1,4 +1,4 @@
-from turtle import update
+import pytorch
 import numpy as np 
 from board_constants import *
 
@@ -36,15 +36,17 @@ class Board():
     
     def checkSquare(self, square):
         prop = BOARD_SQUARES[square]
-        if prop not in BOARD_PROPERTY.keys():
+        if prop in BOARD_PROPERTY.keys():    
+            owner = self.property_map[prop]
+            if owner:
+                valuation = self.user_dict[owner].property[prop]
+                rent = BOARD_PROPERTY[prop][valuation]
+                return rent
             
-        owner = self.property_map[prop]
+            return AVAILABLE
         
-        if owner:
-            valuation = self.user_dict[owner].property[prop]
-            rent = BOARD_PROPERTY[prop][valuation]
-        
-        return rent
+        if prop in ["Chance", "Community Chest"]:
+            pass # To be implemented - Do we group chance by cases and construct a function
 
     def updatePlayer(self, player, square):
         pass
@@ -54,9 +56,13 @@ class Board():
         value = roll()
         updated_square = (self.user_dict[player].current_square+value)%40
         self.user_dict[player].current_square = updated_square
+    
+    def chance_or_community(self):
             
         
+if __name__ == "__main__":
 
+    pass
         
 
 
